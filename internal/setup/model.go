@@ -132,7 +132,7 @@ After adding to PATH, restart your terminal or run:
 			highlightStyle.Render(m.shimPath),
 			highlightStyle.Render(fmt.Sprintf("echo 'export PATH=\"$HOME/.govm/shim:$PATH\"' >> %s", shellConfigFile)),
 			shellConfigFile,
-			highlightStyle.Render(fmt.Sprintf("export PATH=\"$HOME/.govm/shim:$PATH\"")),
+			highlightStyle.Render("export PATH=\"$HOME/.govm/shim:$PATH\""),
 			highlightStyle.Render(fmt.Sprintf("source %s", shellConfigFile)))
 	}
 
