@@ -6,7 +6,7 @@ on:
       - '**.go'
       - go.sum
       - go.mod
-    # form now we can keep push to main, remove after pun release
+    # for now we can keep push to main, remove after full release
     # branches-ignore:
     #   - main
   pull_request:
