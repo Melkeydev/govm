@@ -318,7 +318,9 @@ func DownloadAndInstall(version GoVersion) tea.Cmd {
 		if runtime.GOOS != "windows" {
 			goBin := filepath.Join(versionDir, "bin", "go")
 			if _, err := os.Stat(goBin); err == nil {
-				os.Chmod(goBin, 0755)
+				if err := os.Chmod(goBin, 0755); err != nil {
+					return ErrMsg(fmt.Errorf("failed to set executable permissions: %v", err))
+				}
 			}
 		}
 
@@ -424,4 +426,3 @@ func SwitchVersion(version GoVersion) tea.Cmd {
 		}
 	}
 }
-

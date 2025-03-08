@@ -6,9 +6,8 @@ on:
       - '**.go'
       - go.sum
       - go.mod
-    # for now we can keep push to main, remove after full release
-    # branches-ignore:
-    #   - main
+    branches-ignore:
+      - main
   pull_request:
 
 jobs:
@@ -46,7 +45,3 @@ jobs:
 
       - name: Run golangci-lint
         run: golangci-lint run
-
-      # - name: Run tests
-      #   run: |
-      #     go test ./...
