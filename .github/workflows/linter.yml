@@ -45,3 +45,4 @@ jobs:
 
       - name: Run golangci-lint
         run: golangci-lint run
+
