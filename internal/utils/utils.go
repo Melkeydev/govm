@@ -328,7 +328,7 @@ func SwitchVersion(version GoVersion) tea.Cmd {
 						return ErrMsg(fmt.Errorf("failed to create shim for %s: %v", binName, err))
 					}
 				} else {
-					shimContent := fmt.Sprintf(`#!/bin/bash
+					shimContent := fmt.Sprintf(`#!/usr/bin/env bash
 "%s" "$@"
 `, targetBin)
 					if err := os.WriteFile(shimPath, []byte(shimContent), 0755); err != nil {
@@ -369,4 +369,3 @@ func DeleteVersion(version GoVersion) tea.Cmd {
 		return DeleteCompleteMsg{Version: version.Version}
 	}
 }
-
