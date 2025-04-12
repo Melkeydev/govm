@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/table"
@@ -11,12 +15,13 @@ import (
 	"github.com/melkeydev/govm/internal/model"
 	"github.com/melkeydev/govm/internal/setup"
 	"github.com/melkeydev/govm/internal/utils"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 func main() {
+	if len(os.Args) == 0 {
+		printUsage()
+		return
+	}
 	// Check if user is requesting version information
 	if len(os.Args) > 1 && os.Args[1] == "version" {
 		fmt.Printf("govm %s\n", utils.GetVersion())
@@ -32,6 +37,7 @@ func main() {
 	// handleCommandLine and TUI should never throw at the same time
 	launchTUI()
 }
+
 func handleCommandLine() {
 	if len(os.Args) < 2 {
 		printUsage()
@@ -78,6 +84,7 @@ func handleCommandLine() {
 		printUsage()
 	}
 }
+
 func printUsage() {
 	fmt.Println("GoVM - Go Version Manager")
 	fmt.Println("\nUsage:")
@@ -91,6 +98,7 @@ func printUsage() {
 	fmt.Println("  govm install 1.21      Install Go 1.21.x (latest)")
 	fmt.Println("  govm use 1.20          Switch to Go 1.20.x (latest)")
 }
+
 func launchTUI() {
 	if !setup.IsShimInPath() {
 		setupModel := setup.New()
@@ -159,4 +167,3 @@ func launchTUI() {
 		os.Exit(1)
 	}
 }
-
