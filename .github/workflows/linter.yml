@@ -1,0 +1,48 @@
+name: linter
+
+on:
+  push:
+    paths:
+      - '**.go'
+      - go.sum
+      - go.mod
+    branches-ignore:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+
+      - name: Deps cache
+        id: cache-go-deps
+        uses: actions/cache@v4
+        env:
+          cache-name: go-deps-cache
+        with:
+          path: ~/godeps
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-go-deps.outputs.cache-hit != 'true' }}
+        name: List the state of go modules
+        continue-on-error: true
+        run: go mod graph
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+          go mod download
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.5
+
+      - name: Run golangci-lint
+        run: golangci-lint run
+
