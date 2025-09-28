@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	tea "github.com/charmbracelet/bubbletea"
 	"io"
 	"net/http"
 	"os"
@@ -13,6 +12,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type GoVersion struct {
@@ -123,7 +124,7 @@ func FetchGoVersions() tea.Msg {
 		if entry.IsDir() && strings.HasPrefix(entry.Name(), "go") {
 			versionPath := filepath.Join(goVersionsDir, entry.Name())
 			version := strings.TrimPrefix(entry.Name(), "go")
-			goBin := filepath.Join(versionPath, "bin", "go")
+			goBin := filepath.Join(versionPath, "bin", goBinary)
 			if _, err := os.Stat(goBin); err == nil {
 				installedVersions[version] = versionPath
 			}
@@ -256,18 +257,19 @@ func DownloadAndInstall(version GoVersion) tea.Cmd {
 		if err != nil {
 			return ErrMsg(fmt.Errorf("extraction error: %v\nOutput: %s", err, string(output)))
 		}
+
 		if runtime.GOOS != "windows" {
-			goBin := filepath.Join(versionDir, "bin", "go")
+			goBin := filepath.Join(versionDir, "bin", goBinary)
 			if _, err := os.Stat(goBin); err == nil {
 				os.Chmod(goBin, 0755)
 			}
 		}
-		goBin := filepath.Join(versionDir, "bin", "go")
+		goBin := filepath.Join(versionDir, "bin", goBinary)
 		if _, err := os.Stat(goBin); os.IsNotExist(err) {
 			entries, _ := os.ReadDir(goVersionsDir)
 			for _, entry := range entries {
 				if entry.IsDir() && strings.HasPrefix(entry.Name(), "go") {
-					testPath := filepath.Join(goVersionsDir, entry.Name(), "bin", "go")
+					testPath := filepath.Join(goVersionsDir, entry.Name(), "bin", goBinary)
 					if _, err := os.Stat(testPath); err == nil {
 						sourcePath := filepath.Join(goVersionsDir, entry.Name())
 						if sourcePath != versionDir {
@@ -316,7 +318,7 @@ func SwitchVersion(version GoVersion) tea.Cmd {
 		}
 		for _, entry := range entries {
 			if !entry.IsDir() {
-				binName := entry.Name()
+				binName := strings.Trim(entry.Name(), ".exe")
 				targetBin := filepath.Join(versionBinDir, binName)
 				shimPath := filepath.Join(shimDir, binName)
 				os.Remove(shimPath)
