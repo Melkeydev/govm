@@ -42,13 +42,13 @@ When you first run GoVM, it will guide you through adding the required directory
 Add this to your shell configuration file (~/.bashrc, ~/.zshrc, etc.):
 
 ```bash
-export PATH="$HOME/.govm/shim:$PATH"
+export PATH="$HOME/go/bin:$PATH"
 ```
 
 Or run this command to add it automatically:
 
 ```bash
-echo 'export PATH="$HOME/.govm/shim:$PATH"' >> ~/.bashrc  # or ~/.zshrc
+echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.bashrc  # or ~/.zshrc
 ```
 
 Then reload your shell configuration:
